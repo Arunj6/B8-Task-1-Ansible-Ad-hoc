@@ -1,0 +1,45 @@
+
+Q1 
+Create a user called Tim and set the below-mentioned attributes for him.
+* Unset the logins shell (set non-interactive shell)
+* Uid should be 5005
+* Set GECOS as "Dummy user"
+* Set a minimum expiration date for the password is 10
+
+
+
+-------------
+$ ansible all -b  -m  ansible.builtin.user -a 'name=Tim uid=5005 comment=Dummyuser shell=/usr/sbin/nologin password_expire_max=10 password=$5$u8heiJ
+bCLXadyUy8$LmoI5UEZHdiT4wiLl56UaN2zrPTGc7cQ5Ndm3qrvdB1'
+dev01 | CHANGED => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "append": false,
+    "changed": true,
+    "comment": "Dummyuser",
+    "group": 5005,
+    "home": "/home/Tim",
+    "move_home": false,
+    "name": "Tim",
+    "password": "NOT_LOGGING_PASSWORD",
+    "shell": "/usr/sbin/nologin",
+    "state": "present",
+    "uid": 5005
+}
+
+------------
+
+Result on remote server
+
+
+ubuntu@remote-test:~$ su Tim
+Password:
+This account is currently not available.
+ubuntu@remote-test:~$
+
+ubuntu@remote-test:~$ sudo tail -f /etc/passwd | grep Tim
+Tim:x:5005:5005:Dummyuser:/home/Tim:/usr/sbin/nologin
+
+
+----------
